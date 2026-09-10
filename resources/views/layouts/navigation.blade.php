@@ -10,6 +10,20 @@
                 </a>
             </div>
 
+            @if(auth()->user()->shop)
+                <div class="hidden items-center border-l border-slate-200 pl-4 sm:flex">
+                    <div>
+                        <p class="text-xs font-medium uppercase tracking-wide text-slate-400">
+                            Boutique
+                        </p>
+
+                        <p class="max-w-40 truncate text-sm font-semibold text-slate-800">
+                            {{ auth()->user()->shop->name }}
+                        </p>
+                    </div>
+                </div>
+            @endif
+
             {{-- Navigation desktop --}}
             <div class="hidden items-center gap-8 sm:flex">
 
