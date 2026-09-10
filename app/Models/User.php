@@ -9,6 +9,7 @@ use App\Notifications\VerifyEmailNotification;
 use Database\Factories\UserFactory;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Override;
@@ -53,13 +54,27 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     
+    /**
+     * Send the email verification notification.
+     */
     public function sendEmailVerificationNotification(): void
     {
         $this->notify(new VerifyEmailNotification());
     }
 
+    /**
+     * Send the password reset notification.
+     */
     public function sendPasswordResetNotification($token): void
     {
         $this->notify(new ResetPasswordNotification($token));
+    }
+
+    /**
+     * Un utilisateur peut avoir une boutique
+     */
+    public function shop(): HasOne
+    {
+        return $this->hasOne(Shop::class);
     }
 }
