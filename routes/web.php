@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ShopController;
 use Illuminate\Support\Facades\Route;
@@ -17,6 +18,8 @@ Route::middleware(['auth', 'verified', 'shop'])->group(function () {
     Route::resource('categories', CategoryController::class)
         ->except(['show']);
 
+    Route::resource('products', ProductController::class)
+        ->except(['show']);
 });
 
 Route::middleware('auth')->group(function () {

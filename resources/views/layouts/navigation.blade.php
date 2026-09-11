@@ -41,6 +41,13 @@
                     Catégories
                 </x-nav-link>
 
+                <x-nav-link
+                    :href="route('products.index')"
+                    :active="request()->routeIs('products.*')"
+                >
+                    Produits
+                </x-nav-link>
+
             </div>
 
             {{-- Menu utilisateur desktop --}}
