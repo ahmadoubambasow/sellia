@@ -34,6 +34,13 @@
                     Dashboard
                 </x-nav-link>
 
+                <x-nav-link
+                    :href="route('categories.index')"
+                    :active="request()->routeIs('categories.*')"
+                >
+                    Catégories
+                </x-nav-link>
+
             </div>
 
             {{-- Menu utilisateur desktop --}}

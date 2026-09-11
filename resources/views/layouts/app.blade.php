@@ -41,10 +41,27 @@
     </script>
 
     @stack('styles')
+    <style>
+        [x-cloak] {
+            display: none !important;
+        }
+
+        @keyframes shrink {
+            from {
+                transform: scaleX(1);
+            }
+
+            to {
+                transform: scaleX(0);
+            }
+        }
+    </style>
 </head>
 
 <body class="min-h-screen bg-slate-50 font-sans text-slate-900 antialiased">
 
+    <x-flash-message />
+    
     <div class="min-h-screen">
         @include('layouts.navigation')
 
