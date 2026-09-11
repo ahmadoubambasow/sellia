@@ -4,6 +4,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ShopController;
+use App\Http\Controllers\StockMovementController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -20,6 +21,14 @@ Route::middleware(['auth', 'verified', 'shop'])->group(function () {
 
     Route::resource('products', ProductController::class)
         ->except(['show']);
+
+    Route::resource('stock-movements', StockMovementController::class)
+    ->only([
+        'index',
+        'create',
+        'store',
+    ])
+        ->names('stock-movements');
 });
 
 Route::middleware('auth')->group(function () {

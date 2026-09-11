@@ -43,4 +43,12 @@ class Shop extends Model
     {
         return $this->hasMany(Product::class);
     }
+
+    /**
+     * Mouvements de stock
+     */
+    public function stockMovements(): HasMany
+    {
+        return $this->hasMany(StockMovement::class);
+    }
 }

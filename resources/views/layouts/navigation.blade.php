@@ -48,6 +48,13 @@
                     Produits
                 </x-nav-link>
 
+                <x-nav-link
+                    :href="route('stock-movements.index')"
+                    :active="request()->routeIs('stock-movements.*')"
+                >
+                    Stock
+                </x-nav-link>
+
             </div>
 
             {{-- Menu utilisateur desktop --}}

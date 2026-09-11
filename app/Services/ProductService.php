@@ -55,7 +55,7 @@ class ProductService
             'stock_quantity' => $data['stock_quantity'],
             'low_stock_threshold' => $data['low_stock_threshold'],
             'description' => $data['description'] ?? null,
-            'is_active' => $data['is_active'] ?? false,
+            'is_active' => (bool) ($data['is_active'] ?? false),
         ]);
 
         return $product->refresh();
