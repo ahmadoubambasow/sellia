@@ -55,6 +55,13 @@
                     Stock
                 </x-nav-link>
 
+                <x-nav-link
+                    :href="route('customers.index')"
+                    :active="request()->routeIs('customers.*')"
+                >
+                    Clients
+                </x-nav-link>
+
             </div>
 
             {{-- Menu utilisateur desktop --}}

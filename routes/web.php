@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ShopController;
@@ -29,6 +30,9 @@ Route::middleware(['auth', 'verified', 'shop'])->group(function () {
         'store',
     ])
         ->names('stock-movements');
+    
+    Route::resource('customers', CustomerController::class)
+        ->except(['show']);
 });
 
 Route::middleware('auth')->group(function () {

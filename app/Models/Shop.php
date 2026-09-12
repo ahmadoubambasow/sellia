@@ -51,4 +51,9 @@ class Shop extends Model
     {
         return $this->hasMany(StockMovement::class);
     }
+
+    public function customers(): HasMany
+    {
+        return $this->hasMany(Customer::class);
+    }
 }
