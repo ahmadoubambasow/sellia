@@ -4,6 +4,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SaleController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\StockMovementController;
 use Illuminate\Support\Facades\Route;
@@ -33,6 +34,10 @@ Route::middleware(['auth', 'verified', 'shop'])->group(function () {
     
     Route::resource('customers', CustomerController::class)
         ->except(['show']);
+
+    Route::resource('sales', SaleController::class)
+        ->only(['index', 'create', 'store'])
+        ->names('sales');
 });
 
 Route::middleware('auth')->group(function () {
