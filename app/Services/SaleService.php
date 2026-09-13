@@ -11,6 +11,8 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use RuntimeException;
+use App\Exceptions\InvalidDiscountException;
+use App\Exceptions\InvalidPaymentException;
 
 class SaleService
 {
@@ -185,13 +187,13 @@ class SaleService
         float $subtotal
     ): void {
         if ($discount < 0) {
-            throw new RuntimeException(
+            throw new InvalidDiscountException(
                 'La remise ne peut pas être négative.'
             );
         }
 
         if ($discount > $subtotal) {
-            throw new RuntimeException(
+            throw new InvalidDiscountException(
                 'La remise ne peut pas être supérieure au sous-total.'
             );
         }
@@ -239,19 +241,19 @@ class SaleService
         ?string $paymentMethod
     ): void {
         if ($amountPaid < 0) {
-            throw new RuntimeException(
+            throw new InvalidPaymentException(
                 'Le montant payé ne peut pas être négatif.'
             );
         }
 
         if ($amountPaid > $total) {
-            throw new RuntimeException(
+            throw new InvalidPaymentException(
                 'Le montant payé ne peut pas être supérieur au total de la vente.'
             );
         }
 
         if ($amountPaid > 0 && empty($paymentMethod)) {
-            throw new RuntimeException(
+            throw new InvalidPaymentException(
                 'Veuillez sélectionner un mode de paiement.'
             );
         }

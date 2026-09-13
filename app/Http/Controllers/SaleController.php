@@ -6,6 +6,8 @@ use App\Http\Requests\StoreSaleRequest;
 use App\Models\Sale;
 use App\Services\SaleService;
 use App\Exceptions\InsufficientStockException;
+use App\Exceptions\InvalidDiscountException;
+use App\Exceptions\InvalidPaymentException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
@@ -53,9 +55,8 @@ class SaleController extends Controller
     /**
      * Enregistrer une nouvelle vente.
      */
-    public function store(
-        StoreSaleRequest $request
-    ): RedirectResponse {
+    public function store(StoreSaleRequest $request): RedirectResponse
+    {
         try {
             $sale = $this->saleService->create(
                 $request->user()->shop,
@@ -72,6 +73,13 @@ class SaleController extends Controller
                     . "mais vous demandez "
                     . "{$exception->requestedQuantity} unité(s)."
                 );
+        } catch (
+            InvalidDiscountException |
+            InvalidPaymentException $exception
+        ) {
+            return back()
+                ->withInput()
+                ->with('error', $exception->getMessage());
         }
 
         return redirect()
