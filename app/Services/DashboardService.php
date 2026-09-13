@@ -15,39 +15,75 @@ class DashboardService
 
     public function getOverview(Shop $shop): array
     {
+        $today = $this->salesReportService->getTodaySummary($shop);
+        $yesterday = $this->salesReportService->getYesterdaySummary($shop);
+        $dayBeforeYesterday = $this->salesReportService
+            ->getDayBeforeYesterdaySummary($shop);
+
+        $currentMonth = $this->salesReportService
+            ->getCurrentMonthSummary($shop);
+
+        $previousMonth = $this->salesReportService
+            ->getPreviousMonthSummary($shop);
+
+        $currentYear = $this->salesReportService
+            ->getCurrentYearSummary($shop);
+
         return [
-            'today' => $this->salesReportService
-                ->getTodaySummary($shop),
+            'today' => $today,
 
-            'yesterday' => $this->salesReportService
-                ->getYesterdaySummary($shop),
+            'yesterday' => $yesterday,
 
-            'day_before_yesterday' => $this->salesReportService
-                ->getDayBeforeYesterdaySummary($shop),
+            'day_before_yesterday' => $dayBeforeYesterday,
 
-            'current_month' => $this->salesReportService
-                ->getCurrentMonthSummary($shop),
+            'current_month' => $currentMonth,
 
-            'previous_month' => $this->salesReportService
-                ->getPreviousMonthSummary($shop),
+            'previous_month' => $previousMonth,
 
-            'current_year' => $this->salesReportService
-                ->getCurrentYearSummary($shop),
+            'current_year' => $currentYear,
 
             'sales' => $this->salesReportService
                 ->getSummary($shop),
 
-            'top_products' => $this->productReportService
-                ->getTopSellingProducts($shop),
-            
-            'low_stock_products' => $this->stockReportService
-                ->getLowStockProducts($shop),
+            'evolution' => [
+                'today_vs_yesterday' =>
+                    $this->salesReportService->getRevenueEvolution(
+                        $today,
+                        $yesterday
+                    ),
 
-            'out_of_stock_products' => $this->stockReportService
-                ->getOutOfStockProducts($shop),
+                'yesterday_vs_day_before_yesterday' =>
+                    $this->salesReportService->getRevenueEvolution(
+                        $yesterday,
+                        $dayBeforeYesterday
+                    ),
 
-            'stock' => $this->stockReportService
-                ->getSummary($shop),
+                'current_month_vs_previous_month' =>
+                    $this->salesReportService->getRevenueEvolution(
+                        $currentMonth,
+                        $previousMonth
+                    ),
+            ],
+
+            'revenue_last_seven_days' =>
+                $this->salesReportService
+                    ->getLastSevenDaysRevenue($shop),
+
+            'top_products' =>
+                $this->productReportService
+                    ->getTopSellingProducts($shop),
+
+            'low_stock_products' =>
+                $this->stockReportService
+                    ->getLowStockProducts($shop),
+
+            'out_of_stock_products' =>
+                $this->stockReportService
+                    ->getOutOfStockProducts($shop),
+
+            'stock' =>
+                $this->stockReportService
+                    ->getSummary($shop),
         ];
     }
 

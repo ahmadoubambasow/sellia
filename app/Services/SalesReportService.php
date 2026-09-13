@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Shop;
 use Carbon\Carbon;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 class SalesReportService
@@ -143,6 +144,57 @@ class SalesReportService
             $shop,
             $year->copy()->startOfYear(),
             $year->copy()->endOfYear()
+        );
+    }
+
+    public function getLastSevenDaysRevenue(Shop $shop): Collection
+    {
+        $startDate = Carbon::today()->subDays(6)->startOfDay();
+        $endDate = Carbon::today()->endOfDay();
+
+        $sales = $shop->sales()
+            ->where('status', 'completed')
+            ->whereBetween('sold_at', [$startDate, $endDate])
+            ->selectRaw('DATE(sold_at) as sale_date, SUM(total) as revenue')
+            ->groupBy('sale_date')
+            ->orderBy('sale_date')
+            ->get()
+            ->keyBy('sale_date');
+
+        return collect(range(6, 0))
+            ->map(function (int $daysAgo) use ($sales) {
+                $date = Carbon::today()->subDays($daysAgo);
+                $key = $date->toDateString();
+
+                return [
+                    'date' => $key,
+                    'label' => $date->translatedFormat('D d'),
+                    'revenue' => (float) ($sales->get($key)?->revenue ?? 0),
+            ];
+        });
+    }
+
+    public function getRevenueEvolution(
+        array $currentPeriod,
+        array $previousPeriod
+    ): ?float {
+        return $this->calculateEvolution(
+            (float) $currentPeriod['revenue'],
+            (float) $previousPeriod['revenue']
+        );
+    }
+
+    private function calculateEvolution(
+        float $current,
+        float $previous
+    ): ?float {
+        if ($previous === 0.0) {
+            return $current > 0 ? null : 0.0;
+        }
+
+        return round(
+            (($current - $previous) / $previous) * 100,
+            1
         );
     }
 }
