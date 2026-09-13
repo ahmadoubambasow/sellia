@@ -13,6 +13,7 @@ use Illuminate\Support\Str;
 use RuntimeException;
 use App\Exceptions\InvalidDiscountException;
 use App\Exceptions\InvalidPaymentException;
+use App\Exceptions\SaleAlreadyCancelledException;
 
 class SaleService
 {
@@ -114,6 +115,50 @@ class SaleService
                 'user',
                 'items.product',
             ]);
+        });
+    }
+
+    public function cancel(
+        Shop $shop,
+        User $user,
+        Sale $sale
+    ): Sale {
+        return DB::transaction(function () use (
+            $shop,
+            $user,
+            $sale
+        ) {
+            abort_unless(
+                $sale->shop_id === $shop->id,
+                404
+            );
+
+            if ($sale->status === 'cancelled') {
+                throw new SaleAlreadyCancelledException();
+            }
+
+            $sale->load('items.product');
+
+            foreach ($sale->items as $item) {
+                $this->stockMovementService->create(
+                    $shop,
+                    $user,
+                    [
+                        'product_id' => $item->product_id,
+                        'type' => 'entry',
+                        'quantity' => $item->quantity,
+                        'reason' => 'Annulation de vente',
+                        'reference' => $sale->reference,
+                        'notes' => "Restauration du stock suite à l'annulation de la vente {$sale->reference}.",
+                    ]
+                );
+            }
+
+            $sale->update([
+                'status' => 'cancelled',
+            ]);
+
+            return $sale->refresh();
         });
     }
 

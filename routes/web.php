@@ -36,8 +36,11 @@ Route::middleware(['auth', 'verified', 'shop'])->group(function () {
         ->except(['show']);
 
     Route::resource('sales', SaleController::class)
-        ->only(['index', 'create', 'store'])
+        ->only(['index', 'create', 'store', 'show'])
         ->names('sales');
+    
+    Route::post('/sales/{sale}/cancel',[SaleController::class, 'cancel'])
+        ->name('sales.cancel');
 });
 
 Route::middleware('auth')->group(function () {

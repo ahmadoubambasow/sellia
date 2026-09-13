@@ -322,9 +322,18 @@
                                         <td class="whitespace-nowrap px-6 py-5">
 
                                             <div>
-                                                <p class="text-sm font-semibold text-slate-900">
-                                                    {{ $sale->reference }}
-                                                </p>
+                                                <a
+                                                    href="{{ route('sales.show', $sale) }}"
+                                                    class="group inline-block"
+                                                >
+                                                    <span class="block font-semibold text-sellia-700 transition group-hover:text-sellia-500">
+                                                        {{ $sale->reference }}
+                                                    </span>
+
+                                                    <span class="mt-1 block text-xs text-slate-400 transition group-hover:text-slate-500">
+                                                        Voir le détail
+                                                    </span>
+                                                </a>
 
                                                 <p class="mt-1 text-xs text-slate-400">
                                                     {{ $sale->sold_at?->format('d/m/Y à H:i') }}
@@ -493,9 +502,18 @@
 
                                     <div class="min-w-0">
 
-                                        <p class="text-sm font-bold text-slate-900">
-                                            {{ $sale->reference }}
-                                        </p>
+                                        <a
+                                            href="{{ route('sales.show', $sale) }}"
+                                            class="group inline-block"
+                                        >
+                                            <span class="block font-semibold text-sellia-700 transition group-hover:text-sellia-500">
+                                                {{ $sale->reference }}
+                                            </span>
+
+                                            <span class="mt-1 block text-xs text-slate-400 transition group-hover:text-slate-500">
+                                                Voir le détail
+                                            </span>
+                                        </a>
 
                                         <p class="mt-1 text-xs text-slate-400">
                                             {{ $sale->sold_at?->format('d/m/Y à H:i') }}

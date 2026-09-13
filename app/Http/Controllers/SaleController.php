@@ -8,6 +8,7 @@ use App\Services\SaleService;
 use App\Exceptions\InsufficientStockException;
 use App\Exceptions\InvalidDiscountException;
 use App\Exceptions\InvalidPaymentException;
+use App\Exceptions\SaleAlreadyCancelledException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
@@ -87,6 +88,43 @@ class SaleController extends Controller
             ->with(
                 'success',
                 "La vente {$sale->reference} a été enregistrée avec succès."
+            );
+    }
+
+    public function show(Sale $sale): View
+    {
+        abort_unless(
+            $sale->shop_id === auth()->user()->shop->id,
+            404
+        );
+
+        $sale->load([
+            'customer',
+            'user',
+            'items.product',
+        ]);
+
+        return view('sales.show', compact('sale'));
+    }
+
+    public function cancel(Sale $sale): RedirectResponse
+    {
+        try {
+            $this->saleService->cancel(
+                auth()->user()->shop,
+                auth()->user(),
+                $sale
+            );
+        } catch (SaleAlreadyCancelledException $exception) {
+            return back()
+                ->with('error', $exception->getMessage());
+        }
+
+        return redirect()
+            ->route('sales.show', $sale)
+            ->with(
+                'success',
+                "La vente {$sale->reference} a été annulée et le stock a été restauré."
             );
     }
 }
