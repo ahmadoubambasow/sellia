@@ -15,7 +15,6 @@
 
     {{-- Tailwind CSS CDN --}}
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
     @stack('scripts')
     <script src="https://cdn.tailwindcss.com"></script>
 
