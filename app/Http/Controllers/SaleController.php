@@ -9,13 +9,15 @@ use App\Exceptions\InsufficientStockException;
 use App\Exceptions\InvalidDiscountException;
 use App\Exceptions\InvalidPaymentException;
 use App\Exceptions\SaleAlreadyCancelledException;
+use App\Services\SalesReportService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
 class SaleController extends Controller
 {
     public function __construct(
-        private readonly SaleService $saleService
+        private readonly SaleService $saleService,
+        private readonly SalesReportService $salesReportService
     ) {
     }
 
@@ -28,7 +30,12 @@ class SaleController extends Controller
 
         $sales = $this->saleService->getByShop($shop);
 
-        return view('sales.index', compact('sales'));
+        $summary = $this->salesReportService->getSummary($shop);
+
+        return view('sales.index', compact(
+            'sales',
+            'summary'
+        ));
     }
 
     /**

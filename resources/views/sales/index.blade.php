@@ -42,21 +42,7 @@
         <div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
 
             {{-- Statistiques --}}
-            @php
-                $totalSales = $sales->count();
-
-                $totalRevenue = $sales
-                    ->where('status', 'completed')
-                    ->sum('total');
-
-                $paidSales = $sales
-                    ->where('payment_status', 'paid')
-                    ->count();
-
-                $unpaidSales = $sales
-                    ->where('payment_status', 'unpaid')
-                    ->count();
-            @endphp
+           
 
             <div class="mb-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
 
@@ -70,7 +56,7 @@
                             </p>
 
                             <p class="mt-2 text-2xl font-bold tracking-tight text-slate-900">
-                                {{ number_format($totalSales, 0, ',', ' ') }}
+                                {{ $summary['total_sales'] }}
                             </p>
                         </div>
 
@@ -103,7 +89,7 @@
                             </p>
 
                             <p class="mt-2 text-2xl font-bold tracking-tight text-slate-900">
-                                {{ number_format($totalRevenue, 0, ',', ' ') }}
+                                {{ number_format($summary['total_revenue'], 0, ',', ' ') }}
                                 <span class="text-sm font-semibold text-slate-400">
                                     F
                                 </span>
@@ -139,7 +125,7 @@
                             </p>
 
                             <p class="mt-2 text-2xl font-bold tracking-tight text-slate-900">
-                                {{ number_format($paidSales, 0, ',', ' ') }}
+                                {{ $summary['paid_sales'] }}
                             </p>
                         </div>
 
@@ -172,7 +158,7 @@
                             </p>
 
                             <p class="mt-2 text-2xl font-bold tracking-tight text-slate-900">
-                                {{ number_format($unpaidSales, 0, ',', ' ') }}
+                                {{ $summary['unpaid_sales'] }}
                             </p>
                         </div>
 
@@ -195,6 +181,112 @@
                     </div>
                 </div>
 
+                {{-- Paiements partiels --}}
+                <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+
+                    <div class="flex items-center justify-between">
+
+                        <div>
+                            <p class="text-sm font-medium text-slate-500">
+                                Paiements partiels
+                            </p>
+
+                            <p class="mt-2 text-2xl font-bold text-slate-900">
+                                {{ $summary['partial_sales'] }}
+                            </p>
+                        </div>
+
+                        <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-amber-50 text-amber-600">
+                            <svg
+                                class="h-5 w-5"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                                stroke-width="2"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    d="M12 8v4l3 2m6-2a9 9 0 11-18 0 9 9 0 0118 0z"
+                                />
+                            </svg>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                {{-- Ventes annulées --}}
+                <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+
+                    <div class="flex items-center justify-between">
+
+                        <div>
+                            <p class="text-sm font-medium text-slate-500">
+                                Ventes annulées
+                            </p>
+
+                            <p class="mt-2 text-2xl font-bold text-slate-900">
+                                {{ $summary['cancelled_sales'] }}
+                            </p>
+                        </div>
+
+                        <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-red-50 text-red-600">
+                            <svg
+                                class="h-5 w-5"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                                stroke-width="2"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    d="M6 18L18 6M6 6l12 12"
+                                />
+                            </svg>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                {{-- Reste à encaisser --}}
+                <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+
+                    <div class="flex items-center justify-between">
+
+                        <div>
+                            <p class="text-sm font-medium text-slate-500">
+                                Reste à encaisser
+                            </p>
+
+                            <p class="mt-2 text-2xl font-bold text-amber-600">
+                                {{ number_format($summary['total_remaining'], 0, ',', ' ') }}
+                                FCFA
+                            </p>
+                        </div>
+
+                        <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-amber-50 text-amber-600">
+                            <svg
+                                class="h-5 w-5"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                                stroke-width="2"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    d="M12 8c-1.657 0-3 1.12-3 2.5S10.343 13 12 13s3 1.12 3 2.5S13.657 18 12 18m0-10V6m0 12v-2m0 2a9 9 0 100-18 9 9 0 000 18z"
+                                />
+                            </svg>
+                        </div>
+
+                    </div>
+
+                </div>
+
             </div>
 
             {{-- Liste --}}
@@ -215,8 +307,8 @@
                         </div>
 
                         <div class="text-sm text-slate-400">
-                            {{ $totalSales }}
-                            {{ $totalSales > 1 ? 'ventes' : 'vente' }}
+                            {{ $summary ['total_sales'] }}
+                            {{ $summary ['total_sales'] > 1 ? 'ventes' : 'vente' }}
                         </div>
 
                     </div>
