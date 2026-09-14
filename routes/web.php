@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DashboardController;
@@ -10,9 +12,9 @@ use App\Http\Controllers\ShopController;
 use App\Http\Controllers\StockMovementController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [AuthenticatedSessionController::class, 'create']);
+Route::get('/register', [RegisteredUserController::class, 'create']);
+
 
 Route::middleware(['auth', 'verified', 'shop'])->group(function () {
 
