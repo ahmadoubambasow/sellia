@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SaleController;
@@ -44,6 +45,13 @@ Route::middleware(['auth', 'verified', 'shop'])->group(function () {
     
     Route::post('/sales/{sale}/cancel',[SaleController::class, 'cancel'])
         ->name('sales.cancel');
+
+
+    Route::get('/sales/{sale}/payments/create',[PaymentController::class, 'create'])
+        ->name('sales.payments.create');
+
+    Route::post('/sales/{sale}/payments',[PaymentController::class, 'store'])
+        ->name('sales.payments.store');
 });
 
 Route::middleware('auth')->group(function () {
