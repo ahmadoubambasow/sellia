@@ -89,7 +89,7 @@
         La sidebar desktop occupe 16rem.
         La topbar desktop commence après la sidebar.
     ========================================================== --}}
-    <div class="min-h-screen lg:pl-64">
+    <div class="min-h-screen pt-16 lg:pl-64 lg:pt-20">
 
         {{-- -----------------------------------------------------
             CONTENU SOUS LA TOPBAR

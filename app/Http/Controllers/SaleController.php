@@ -107,9 +107,11 @@ class SaleController extends Controller
         );
 
         $sale->load([
+            'shop',
             'customer',
             'user',
             'items.product',
+            'payments.user'
         ]);
 
         return view('sales.show', compact('sale'));

@@ -662,7 +662,7 @@
 
 
                     {{-- Historique des paiements --}}
-                    @if($sale->payments->isNotEmpty())
+                    @if($sale->payments?->isNotEmpty())
 
                         <div class="mt-6 border-t border-slate-100 pt-6">
 
