@@ -1,88 +1,143 @@
 <!DOCTYPE html>
+
 <html lang="fr">
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'SELLIA') }}</title>
+        <title>{{ config('app.name', 'SELLIA') }}</title>
 
-    <meta
-        name="description"
-        content="{{ config('app.description', 'Solution simple et moderne de gestion commerciale') }}"
-    >
+        <meta
+            name="description"
+            content="{{ config('app.description', 'Solution simple et moderne de gestion commerciale') }}"
+        >
 
-    {{-- Tailwind CSS CDN --}}
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    @stack('scripts')
-    <script src="https://cdn.tailwindcss.com"></script>
+        {{-- =========================================================
+            TAILWIND CSS CDN
+        ========================================================== --}}
+        <script src="https://cdn.tailwindcss.com"></script>
 
-    {{-- Configuration Tailwind --}}
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        sellia: {
-                            50: '#eff6ff',
-                            100: '#dbeafe',
-                            500: '#2563EB',
-                            600: '#1D4ED8',
-                            700: '#1E3A8A',
-                            800: '#1E40AF',
-                        },
-                        accent: {
-                            500: '#14B8A6',
-                            600: '#0D9488',
+        {{-- Configuration Tailwind --}}
+        <script>
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        colors: {
+                            sellia: {
+                                50: '#eff6ff',
+                                100: '#dbeafe',
+                                500: '#2563EB',
+                                600: '#1D4ED8',
+                                700: '#1E3A8A',
+                                800: '#1E40AF',
+                            },
+
+                            accent: {
+                                500: '#14B8A6',
+                                600: '#0D9488',
+                            },
                         },
                     },
                 },
-            },
-        }
-    </script>
+            }
+        </script>
 
-    @stack('styles')
-    <style>
-        [x-cloak] {
-            display: none !important;
-        }
+        {{-- =========================================================
+            CHART.JS
+        ========================================================== --}}
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-        @keyframes shrink {
-            from {
-                transform: scaleX(1);
+        {{-- Styles supplémentaires --}}
+        @stack('styles')
+
+        <style>
+            [x-cloak] {
+                display: none !important;
             }
 
-            to {
-                transform: scaleX(0);
+            @keyframes shrink {
+                from {
+                    transform: scaleX(1);
+                }
+
+                to {
+                    transform: scaleX(0);
+                }
             }
-        }
-    </style>
-</head>
+        </style>
+
+    </head>
 
 <body class="min-h-screen bg-slate-50 font-sans text-slate-900 antialiased">
 
+    {{-- =========================================================
+        MESSAGES FLASH
+    ========================================================== --}}
     <x-flash-message />
-    
-    <div class="min-h-screen">
-        @include('layouts.navigation')
 
-        @isset($header)
-            <header class="border-b border-slate-200 bg-white">
-                <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-                    {{ $header }}
+
+    {{-- =========================================================
+        NAVIGATION
+    ========================================================== --}}
+    @include('layouts.navigation')
+
+
+    {{-- =========================================================
+        CONTENU PRINCIPAL
+        La sidebar desktop occupe 16rem.
+        La topbar desktop commence après la sidebar.
+    ========================================================== --}}
+    <div class="min-h-screen lg:pl-64">
+
+        {{-- -----------------------------------------------------
+            CONTENU SOUS LA TOPBAR
+        ------------------------------------------------------ --}}
+        <div class="lg:pt-20">
+
+            {{-- Header de page --}}
+            @isset($header)
+                <header class="border-b border-slate-200 bg-white">
+
+                    <div class="mx-auto max-w-[1600px] px-4 py-6 sm:px-6 lg:px-8">
+                        {{ $header }}
+                    </div>
+
+                </header>
+            @endisset
+
+
+            {{-- -------------------------------------------------
+                CONTENU
+            -------------------------------------------------- --}}
+            <main>
+
+                <div class="mx-auto max-w-[1600px] px-4 py-6 sm:px-6 lg:px-8">
+                    {{ $slot }}
                 </div>
-            </header>
-        @endisset
 
-        <main>
-            {{ $slot }}
-        </main>
+            </main>
+
+        </div>
+
     </div>
 
-    @stack('scripts')
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
-</body>
+    {{-- =========================================================
+        ALPINE JS
+    ========================================================== --}}
+    <script
+        defer
+        src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"
+    ></script>
+
+
+    {{-- =========================================================
+        SCRIPTS DES COMPOSANTS / PAGES
+    ========================================================== --}}
+    @stack('scripts')
+
+    </body>
 
 </html>

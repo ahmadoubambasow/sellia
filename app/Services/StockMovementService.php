@@ -9,10 +9,12 @@ use App\Models\StockMovement;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
+use App\Notifications\StockThresholdReached;
 use RuntimeException;
 
 class StockMovementService
 {
+
     public function getByShop(Shop $shop): Collection
     {
         return $shop->stockMovements()
@@ -63,6 +65,11 @@ class StockMovementService
                 'stock_quantity' => $stockAfter,
             ]);
 
+            $this->notifyStockThreshold(
+                product: $product,
+                stockBefore: $stockBefore,
+                stockAfter: $stockAfter,
+            );
             return $shop->stockMovements()->create([
                 'product_id' => $product->id,
                 'user_id' => $user->id,
@@ -114,5 +121,50 @@ class StockMovementService
                 $quantity
             );
         }
+    }
+
+    private function notifyStockThreshold(
+        Product $product,
+        int $stockBefore,
+        int $stockAfter
+    ): void {
+        $threshold = $product->low_stock_threshold;
+
+        /*
+        * 1. Le produit entre dans la zone de stock faible.
+        *
+        * Exemple :
+        * 6 → 5 avec seuil 5
+        */
+        $reachedThreshold =
+            $stockBefore > $threshold &&
+            $stockAfter > 0 &&
+            $stockAfter <= $threshold;
+
+        /*
+        * 2. Le produit passe en rupture.
+        *
+        * On notifie même s'il était déjà sous le seuil.
+        *
+        * Exemple :
+        * 5 → 0
+        * 2 → 0
+        * 1 → 0
+        */
+        $outOfStock =
+            $stockBefore > 0 &&
+            $stockAfter === 0;
+
+        if (! $reachedThreshold && ! $outOfStock) {
+            return;
+        }
+
+        $product->shop->user->notify(
+            new StockThresholdReached(
+                product: $product,
+                stockBefore: $stockBefore,
+                stockAfter: $stockAfter,
+            )
+        );
     }
 }

@@ -5,10 +5,12 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SaleController;
+use App\Http\Controllers\SearchController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\StockMovementController;
 use Illuminate\Support\Facades\Route;
@@ -52,6 +54,21 @@ Route::middleware(['auth', 'verified', 'shop'])->group(function () {
 
     Route::post('/sales/{sale}/payments',[PaymentController::class, 'store'])
         ->name('sales.payments.store');
+
+    Route::get('/search', [SearchController::class, 'index'])
+        ->name('search');
+    
+    Route::get('/search/suggestions', [SearchController::class, 'suggestions'])
+        ->name('search.suggestions');
+
+    Route::get('/notifications', [NotificationController::class, 'index'])
+        ->name('notifications.index');
+
+    Route::patch('/notifications/{notification}/read', [NotificationController::class, 'markAsRead'])
+        ->name('notifications.read');
+
+    Route::patch('/notifications/read-all', [NotificationController::class, 'markAllAsRead'])
+        ->name('notifications.read-all');
 });
 
 Route::middleware('auth')->group(function () {
