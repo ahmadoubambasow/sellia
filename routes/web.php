@@ -55,6 +55,9 @@ Route::middleware(['auth', 'verified', 'shop'])->group(function () {
     Route::post('/sales/{sale}/payments',[PaymentController::class, 'store'])
         ->name('sales.payments.store');
 
+    Route::get('/sales/{sale}/receipt', [SaleController::class, 'receipt'])
+        ->name('sales.receipt');
+
     Route::get('/search', [SearchController::class, 'index'])
         ->name('search');
     
@@ -69,6 +72,7 @@ Route::middleware(['auth', 'verified', 'shop'])->group(function () {
 
     Route::patch('/notifications/read-all', [NotificationController::class, 'markAllAsRead'])
         ->name('notifications.read-all');
+        
 });
 
 Route::middleware('auth')->group(function () {

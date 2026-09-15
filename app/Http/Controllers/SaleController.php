@@ -134,4 +134,22 @@ class SaleController extends Controller
                 "La vente {$sale->reference} a été annulée et le stock a été restauré."
             );
     }
+
+    public function receipt(Sale $sale): View
+    {
+        $sale->load([
+            'shop',
+            'customer',
+            'user',
+            'items.product',
+            'payments.user',
+        ]);
+
+        abort_unless(
+            $sale->shop_id === auth()->user()->shop->id,
+            403
+        );
+
+        return view('sales.receipt', compact('sale'));
+    }
 }
