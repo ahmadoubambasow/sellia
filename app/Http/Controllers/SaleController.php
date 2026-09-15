@@ -10,6 +10,7 @@ use App\Exceptions\InvalidDiscountException;
 use App\Exceptions\InvalidPaymentException;
 use App\Exceptions\SaleAlreadyCancelledException;
 use App\Services\SalesReportService;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
@@ -151,5 +152,31 @@ class SaleController extends Controller
         );
 
         return view('sales.receipt', compact('sale'));
+    }
+
+    public function receiptPdf(Sale $sale)
+    {
+        abort_unless(
+            $sale->shop_id === auth()->user()->shop->id,
+            403
+        );
+
+        $sale->load([
+            'shop',
+            'customer',
+            'user',
+            'items.product',
+            'payments.user',
+        ]);
+
+        $pdf = Pdf::loadView('sales.receipt-pdf', [
+            'sale' => $sale,
+        ]);
+
+        $pdf->setPaper([0, 0, 226.77, 600], 'portrait');
+
+        return $pdf->download(
+            'ticket-' . $sale->reference . '.pdf'
+        );
     }
 }

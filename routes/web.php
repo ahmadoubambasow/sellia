@@ -58,6 +58,12 @@ Route::middleware(['auth', 'verified', 'shop'])->group(function () {
     Route::get('/sales/{sale}/receipt', [SaleController::class, 'receipt'])
         ->name('sales.receipt');
 
+    Route::get('/sales/{sale}/receipt', [SaleController::class, 'receipt'])
+        ->name('sales.receipt');
+
+    Route::get('/sales/{sale}/receipt/pdf', [SaleController::class, 'receiptPdf'])
+        ->name('sales.receipt.pdf');
+
     Route::get('/search', [SearchController::class, 'index'])
         ->name('search');
     
